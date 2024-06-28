@@ -46,8 +46,15 @@ jobs:
       with:
         version: 'latest'
 
+    - name: Create kubeconfig directory
+      run: mkdir -p $HOME/.kube
+
+    - name: Configure kubeconfig
+      run: |
+        echo "${{ secrets.KUBE_CONFIG_DATA }}" > $HOME/.kube/config
+      env:
+        KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
+
     - name: Update Kubernetes deployment
       run: |
         kubectl set image deployment/my-vite-react-app my-vite-react-app=${{ secrets.DOCKER_HUB }}/my-vite-react-app:latest
-      env:
-        KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
